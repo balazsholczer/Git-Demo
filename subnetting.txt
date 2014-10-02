@@ -1,0 +1,49 @@
+
+	Subnetting: is to minimize the wastage of IP addresses
+		Nem kell 4 kulon halozatot letrehozni negy reszlegnek pl -> lehet elfer egy halozaton ha azt a halozatot subnetting alapjan
+			felosztjuk...kevesebb host lehet egy halozaton, meg el is veszik mindig 2 a halozat + broadcast cimek miatt
+				-de lehe egyebkent nem lenne kihasznalva a max hosztszam
+
+
+		FLSM: "Fixed Length Subnet Mask"  mindegyik subnet ugyanolyan nagysagu -> egyenlo nagysagok dominalnak
+				Ezt kevesbe hasznaljak manapsag!!!
+
+			Mindig az elvarasnak kell megfeleni: az lehet a hosztok alapjan vagy a netwoek alapjan
+				hosts ->  2^h-2 >= requirements, ahol h a mask host bitjeinek szama
+				networks -> 2^n >= requirements, ahol n a mask network bitjeinek szama
+			
+		Hoszt biteket konvertaljuk at network bitekke: igy lehet subnettingelni
+
+		A subnet maskok: 
+		A class : 11111111.00000000.00000000.00000000.
+		B class : 11111111.11111111.00000000.00000000.
+		C class : 11111111.11111111.11111111.00000000.
+
+		pl: 40 hostra kell C class networkot csinalni
+			2^h-2 >= 40 jelen esetben szoval h = 6 egeszekre valo kerekites miatt
+				2^6-2 = 62 ez az utolso valid host cim a halozaton
+				 FONTOS: ha siman a C classt hasznalnank 254-40=214 hoszt veszne karba
+					Igy csak 62-40=22 cim fog karba menni, joval kisebb szam ez jo!!!
+			h: required host bits
+				Szoval a maszk: 11111111.11111111.11111111.11000000 ilyen lesz most, ami 255.255.255.192/26
+					Mivel 2 bit log bele: 2*2= subnetunk lesz -> mindegyik ugyanolyan nagysagu, hiszen FLSMrol van szo			
+						2^6=64hoszt tud lenni mindegyik subneten/alhalozaton egyszerre
+
+			Range: 2*2*2*2*2*2=64
+			Tehat a negy halozat -> 0-63 ; 64-127 ; 128 - 191 ; 192 - 255
+				Es mivel C classban vagyunk, az elso harom oktett valtozatlan lesz mindig: 192.168.1....
+					192.168.1.0-192.168.1.63
+					192.168.1.64-192.168.1.127
+					192.168.1.128-192.168.1.191
+					192.168.1.192-192.168.1.255
+				DE FONTOS: ezekbol lejon halozatonkent 2: az elso a halozatot jeloli mindig, az utolso a broadcast cim
+
+
+
+		B class example -> same 
+	A / jeloles fontos nagyon!!! / utan mindig a toal number of network bits jon ... csak annyit jelent
+			- reprezent total network bits
+			- azert jo odairni, mert abbol ki lehet egybol talalni a subnet maskot
+				pl: 192.168.0.10 -> ilyenkor azt gondoljuk, hogy a standard C lass 255.255.255.0 subnet maskja van
+			Ha odairjuk, hogy 192.168.1.10/26 -> akko tudjuk, hogy egy tobb alhalozatbol is all, mivel a network bitek szama
+				26, azaz a subnet mask ilyen: 255.255.255.192 ... ebbol ki lehet talani, hogy 4 alhalozat van !!!
